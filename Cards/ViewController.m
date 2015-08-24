@@ -103,6 +103,7 @@
     detailViewController.dataSource = self.colorArray;
     detailViewController.dataSourceIndex = indexPath.item;
     
+//    [self presentViewController:detailViewController animated:YES completion:nil];
     [self.navigationController pushViewController:detailViewController animated:YES];
 }
 

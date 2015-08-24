@@ -10,6 +10,7 @@
 
 #import "ViewController.h"
 #import "DetailViewController.h"
+#import "KCNLargeCardFlowLayout.h"
 
 @implementation TransitionController
 
@@ -26,6 +27,11 @@
         [self animatePushFromViewController:fromViewController
                      toDetailViewController:toViewController
                           transitionContext:transitionContext];
+    } else if ([fromViewController isKindOfClass:[DetailViewController class]] &&
+               [toViewController isKindOfClass:[ViewController class]]) {
+        [self animatePopFromDetailViewController:fromViewController
+                                toViewController:toViewController
+                               transitionContext:transitionContext];
     }
 }
 
@@ -37,14 +43,18 @@
     detailViewController.view.hidden = YES;
     [containerView addSubview:detailViewController.view];
     
-    UICollectionViewCell *cell = [viewController.collectionView cellForItemAtIndexPath:[NSIndexPath indexPathForItem:detailViewController.dataSourceIndex inSection:0]];
+    NSIndexPath *selectedIndexPath = [viewController.collectionView indexPathsForSelectedItems].firstObject;
+    UICollectionViewCell *cell = [viewController.collectionView cellForItemAtIndexPath:selectedIndexPath];
     UIView *cellSnapshot = [cell snapshotViewAfterScreenUpdates:NO];
-    cellSnapshot.frame = [containerView convertRect:cell.frame fromView:viewController.view];
+    cellSnapshot.frame = [containerView convertRect:cell.frame fromView:viewController.collectionView];
     [containerView addSubview:cellSnapshot];
     
     [UIView animateWithDuration:0.3f animations:^{
-        CGRect frame = CGRectMake(4, 68 + 4, CGRectGetWidth(detailViewController.collectionView.frame) - (4 * 2), CGRectGetHeight(detailViewController.collectionView.frame) - (4 * 2));
-        cellSnapshot.frame = frame;
+        KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:detailViewController.collectionView.frame];
+        cellSnapshot.frame = CGRectMake(CGRectGetMinX(detailViewController.collectionView.frame) + layout.minimumLineSpacing,
+                                        CGRectGetMinY(detailViewController.collectionView.frame) + layout.minimumLineSpacing,
+                                        layout.itemSize.width,
+                                        layout.itemSize.height);
     } completion:^(BOOL finished) {
         detailViewController.view.hidden = NO;
         [cellSnapshot removeFromSuperview];
@@ -52,5 +62,66 @@
     }];
 }
 
+- (void)animatePopFromDetailViewController:(DetailViewController *)detailViewController toViewController:(ViewController *)viewController transitionContext:(id <UIViewControllerContextTransitioning>)transitionContext {
+    UIView *containerView = [transitionContext containerView];
+    [containerView addSubview:viewController.view];
+    
+    NSIndexPath *selectedIndexPath = [detailViewController.collectionView indexPathsForSelectedItems].firstObject;
+    UICollectionViewCell *cell = [detailViewController.collectionView cellForItemAtIndexPath:selectedIndexPath];
+    UIView *cellSnapshot = [cell snapshotViewAfterScreenUpdates:NO];
+    cellSnapshot.frame = [containerView convertRect:cell.frame fromView:detailViewController.collectionView];
+    [containerView addSubview:cellSnapshot];
+    
+    if (detailViewController.dataSourceIndex != selectedIndexPath.item) {
+        if (detailViewController.dataSourceIndex < selectedIndexPath.item - 1) {
+            [viewController.collectionView scrollToItemAtIndexPath:selectedIndexPath atScrollPosition:UICollectionViewScrollPositionRight animated:NO];
+        } else if (detailViewController.dataSourceIndex > selectedIndexPath.item + 1) {
+            [viewController.collectionView scrollToItemAtIndexPath:selectedIndexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
+        }
+    }
+    
+    [UIView animateWithDuration:0.3f animations:^{
+        UICollectionViewLayoutAttributes *cellLayout = [viewController.collectionView.collectionViewLayout layoutAttributesForItemAtIndexPath:selectedIndexPath];
+        cellSnapshot.frame = [containerView convertRect:cellLayout.frame fromView:viewController.collectionView];
+    } completion:^(BOOL finished) {
+        [cellSnapshot removeFromSuperview];
+        [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
+    }];
+}
+
+
+
+
+
+
+
+
+
+
 
 @end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -49,12 +49,12 @@
 
 // UICollectionView align logic missing in horizontal paging scrollview: http://stackoverflow.com/a/20156486/1807446
 - (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGSize canvasSize = self.collectionView.frame.size;
+    CGRect collectionViewFrame = self.collectionView.frame;
     
-    NSUInteger rowCount = (canvasSize.height - self.itemSize.height) / (self.itemSize.height + self.minimumInteritemSpacing) + 1;
-    NSUInteger columnCount = (canvasSize.width - self.itemSize.width) / (self.itemSize.width + self.minimumLineSpacing) + 1;
+    NSUInteger rowCount = (CGRectGetHeight(collectionViewFrame) - self.itemSize.height) / (self.itemSize.height + self.minimumLineSpacing) + 1;
+    NSUInteger columnCount = (CGRectGetWidth(collectionViewFrame) - self.itemSize.width) / (self.itemSize.width + self.minimumLineSpacing) + 1;
     
-    CGFloat pageMarginX = (canvasSize.width - columnCount * self.itemSize.width - (columnCount > 1 ? (columnCount - 1) * self.minimumLineSpacing : 0)) / 2.0f;
+    CGFloat pageMarginX = (CGRectGetWidth(collectionViewFrame) - columnCount * self.itemSize.width - (columnCount > 1 ? (columnCount - 1) * self.minimumLineSpacing : 0)) / 2.0f;
     
     NSUInteger page = indexPath.row / (rowCount * columnCount);
     NSUInteger remainder = indexPath.row - page * (rowCount * columnCount);
@@ -68,7 +68,7 @@
     cellFrame.size.height = self.itemSize.height;
     
     if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        cellFrame.origin.x += page * canvasSize.width;
+        cellFrame.origin.x += page * CGRectGetWidth(collectionViewFrame);
     }
     
     return cellFrame;
