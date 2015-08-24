@@ -29,13 +29,11 @@
     self.minimumInteritemSpacing = 10.0f;
     self.minimumLineSpacing = 4.0f;
     
-    NSInteger itemWidth = CGRectGetWidth(frame) - (self.minimumLineSpacing * 2);
-    NSInteger itemHeight = CGRectGetHeight(frame) - 68 - self.minimumLineSpacing;
-    
-    self.itemSize = CGSizeMake(itemWidth, itemHeight);
+    self.itemSize = CGSizeMake(CGRectGetWidth(frame) - (self.minimumLineSpacing * 2),
+                               CGRectGetHeight(frame) - (self.minimumLineSpacing * 2));
     
     // top, left, bottom, right
-    self.sectionInset = UIEdgeInsetsMake(68,
+    self.sectionInset = UIEdgeInsetsMake(self.minimumLineSpacing,
                                          self.minimumLineSpacing,
                                          self.minimumLineSpacing,
                                          self.minimumLineSpacing);
@@ -50,8 +48,7 @@
 }
 
 // UICollectionView align logic missing in horizontal paging scrollview: http://stackoverflow.com/a/20156486/1807446
-- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
     CGSize canvasSize = self.collectionView.frame.size;
     
     NSUInteger rowCount = (canvasSize.height - self.itemSize.height) / (self.itemSize.height + self.minimumInteritemSpacing) + 1;

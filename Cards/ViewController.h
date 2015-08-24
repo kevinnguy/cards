@@ -11,5 +11,7 @@
 
 @interface ViewController : UIViewController
 
+@property (nonatomic, strong) UICollectionView *collectionView;
+
 @end
 

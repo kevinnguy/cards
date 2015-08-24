@@ -11,13 +11,13 @@
 
 #import "CustomCollectionViewCell.h"
 #import "KCNCardFlowLayout.h"
+#import "TransitionController.h"
 
 #import <UIColor+Chameleon.h>
 
-@interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
+@interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate>
 
 @property (nonatomic, strong) UIView *topView;
-@property (nonatomic, strong) UICollectionView *collectionView;
 
 @property (nonatomic, strong) NSMutableArray *colorArray;
 
@@ -25,6 +25,7 @@
 
 @implementation ViewController
 
+#pragma mark - Lifecycle
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -39,6 +40,23 @@
     [self.collectionView reloadData];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    self.navigationController.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (self.navigationController.delegate == self) {
+        self.navigationController.delegate = nil;
+    }
+}
+
+- (void)dealloc {
+    self.navigationController.delegate = nil;
+}
+
+#pragma mark - View initialization
 - (void)setupTopView {
     self.topView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.topView.clipsToBounds = YES;
@@ -56,6 +74,15 @@
     self.collectionView.backgroundColor = [UIColor clearColor];
     [self.view addSubview:self.collectionView];
 }
+
+#pragma mark - UINavigationControllerDelegate
+- (id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                   animationControllerForOperation:(UINavigationControllerOperation)operation
+                                                fromViewController:(UIViewController *)fromVC
+                                                  toViewController:(UIViewController *)toVC {
+    return [TransitionController new];
+}
+
 
 #pragma mark - UICollectionViewDataSource
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
@@ -76,7 +103,7 @@
     detailViewController.dataSource = self.colorArray;
     detailViewController.dataSourceIndex = indexPath.item;
     
-    [self presentViewController:detailViewController animated:YES completion:nil];
+    [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
 

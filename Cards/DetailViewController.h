@@ -10,6 +10,7 @@
 
 @interface DetailViewController : UIViewController
 
+@property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic) NSInteger dataSourceIndex;
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) UIColor *backgroundColor;

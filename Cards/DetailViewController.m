@@ -10,9 +10,9 @@
 
 #import "CustomCollectionViewCell.h"
 #import "KCNLargeCardFlowLayout.h"
+#import "TransitionController.h"
 
-@interface DetailViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout>
-@property (nonatomic, strong) UICollectionView *collectionView;
+@interface DetailViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate>
 
 @end
 
@@ -29,9 +29,26 @@
                                         animated:NO];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    self.navigationController.delegate = self;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    if (self.navigationController.delegate == self) {
+        self.navigationController.delegate = nil;
+    }
+}
+
+- (void)dealloc {
+    self.navigationController.delegate = nil;
+}
+
 - (void)setupCollectionView {
-    KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:self.view.bounds];
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
+    CGRect collectionViewFrame = CGRectMake(0, 68, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 68);
+    KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:collectionViewFrame];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewFrame
                                              collectionViewLayout:layout];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
@@ -41,6 +58,15 @@
     
     [self.view addSubview:self.collectionView];
 }
+
+#pragma mark - UINavigationControllerDelegate
+- (id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
+                                   animationControllerForOperation:(UINavigationControllerOperation)operation
+                                                fromViewController:(UIViewController *)fromVC
+                                                  toViewController:(UIViewController *)toVC {
+    return [TransitionController new];
+}
+
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {

@@ -17,6 +17,7 @@
 		0ABEA8211B8B9C7D0050EF50 /* CustomCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEA8201B8B9C7D0050EF50 /* CustomCollectionViewCell.m */; };
 		0ABEA8241B8BB6E40050EF50 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEA8231B8BB6E40050EF50 /* DetailViewController.m */; };
 		0ABEA8271B8BB8EF0050EF50 /* KCNLargeCardFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEA8261B8BB8EF0050EF50 /* KCNLargeCardFlowLayout.m */; };
+		0ABEA82A1B8BC3BB0050EF50 /* TransitionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEA8291B8BC3BB0050EF50 /* TransitionController.m */; };
 		4E37C40E226A4280B5BC7954 /* libPods-Cards.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FE945E0092DB2040B463452 /* libPods-Cards.a */; };
 /* End PBXBuildFile section */
 
@@ -51,6 +52,8 @@
 		0ABEA8231B8BB6E40050EF50 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		0ABEA8251B8BB8EF0050EF50 /* KCNLargeCardFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KCNLargeCardFlowLayout.h; sourceTree = "<group>"; };
 		0ABEA8261B8BB8EF0050EF50 /* KCNLargeCardFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KCNLargeCardFlowLayout.m; sourceTree = "<group>"; };
+		0ABEA8281B8BC3BB0050EF50 /* TransitionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TransitionController.h; sourceTree = "<group>"; };
+		0ABEA8291B8BC3BB0050EF50 /* TransitionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TransitionController.m; sourceTree = "<group>"; };
 		3434B778599A317DD93B6650 /* Pods-Cards.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cards.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Cards/Pods-Cards.debug.xcconfig"; sourceTree = "<group>"; };
 		7FE945E0092DB2040B463452 /* libPods-Cards.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Cards.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D62DE28844A06AA44350F829 /* Pods-Cards.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Cards.release.xcconfig"; path = "Pods/Target Support Files/Pods-Cards/Pods-Cards.release.xcconfig"; sourceTree = "<group>"; };
@@ -107,6 +110,8 @@
 				0ABEA8231B8BB6E40050EF50 /* DetailViewController.m */,
 				0ABEA81F1B8B9C7D0050EF50 /* CustomCollectionViewCell.h */,
 				0ABEA8201B8B9C7D0050EF50 /* CustomCollectionViewCell.m */,
+				0ABEA8281B8BC3BB0050EF50 /* TransitionController.h */,
+				0ABEA8291B8BC3BB0050EF50 /* TransitionController.m */,
 				0A3AB1F31B879CB400A65E42 /* Images.xcassets */,
 				0A3AB1F51B879CB400A65E42 /* LaunchScreen.xib */,
 				0A3AB1E61B879CB400A65E42 /* Supporting Files */,
@@ -302,6 +307,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ABEA82A1B8BC3BB0050EF50 /* TransitionController.m in Sources */,
 				0A3AB1EF1B879CB400A65E42 /* ViewController.m in Sources */,
 				0ABEA8271B8BB8EF0050EF50 /* KCNLargeCardFlowLayout.m in Sources */,
 				0A3AB1EC1B879CB400A65E42 /* AppDelegate.m in Sources */,
