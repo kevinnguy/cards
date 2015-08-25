@@ -15,4 +15,7 @@
 @property (nonatomic, strong) NSMutableArray *dataSource;
 @property (nonatomic, strong) UIColor *backgroundColor;
 
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *detailLabel;
+
 @end

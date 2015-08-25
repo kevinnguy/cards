@@ -45,9 +45,26 @@
     
     NSIndexPath *selectedIndexPath = [viewController.collectionView indexPathsForSelectedItems].firstObject;
     UICollectionViewCell *cell = [viewController.collectionView cellForItemAtIndexPath:selectedIndexPath];
+    
     UIView *cellSnapshot = [cell snapshotViewAfterScreenUpdates:NO];
     cellSnapshot.frame = [containerView convertRect:cell.frame fromView:viewController.collectionView];
     [containerView addSubview:cellSnapshot];
+    
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:viewController.titleLabel.frame];
+    titleLabel.font = viewController.titleLabel.font;
+    titleLabel.textAlignment = viewController.titleLabel.textAlignment;
+    titleLabel.text = viewController.titleLabel.text;
+    [containerView addSubview:titleLabel];
+    
+    UILabel *detailLabel = [[UILabel alloc] initWithFrame:viewController.detailLabel.frame];
+    detailLabel.font = viewController.detailLabel.font;
+    detailLabel.textAlignment = viewController.detailLabel.textAlignment;
+    detailLabel.text = viewController.detailLabel.text;
+    [containerView addSubview:detailLabel];
+    
+    viewController.titleLabel.hidden = YES;
+    viewController.detailLabel.hidden = YES;
+    
     
     [UIView animateWithDuration:0.3f animations:^{
         KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:detailViewController.collectionView.frame];
@@ -55,9 +72,25 @@
                                         CGRectGetMinY(detailViewController.collectionView.frame) + layout.minimumLineSpacing,
                                         layout.itemSize.width,
                                         layout.itemSize.height);
+        
+        titleLabel.transform = CGAffineTransformScale(titleLabel.transform, 0.45f, 0.45f);
+        CGRect titleLabelFrame = titleLabel.frame;
+        titleLabelFrame.origin.y = 12;
+        titleLabel.frame = titleLabelFrame;
+
+        detailLabel.transform = CGAffineTransformScale(detailLabel.transform, 0.778f, 0.778f);
+        CGRect detailLabelFrame = detailLabel.frame;
+        detailLabelFrame.origin.y = 39;
+        detailLabel.frame = detailLabelFrame;
+        
     } completion:^(BOOL finished) {
+        viewController.titleLabel.hidden = NO;
+        viewController.detailLabel.hidden = NO;
         detailViewController.view.hidden = NO;
+        
         [cellSnapshot removeFromSuperview];
+        [titleLabel removeFromSuperview];
+        [detailLabel removeFromSuperview];
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
     }];
 }

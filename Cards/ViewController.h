@@ -13,5 +13,8 @@
 
 @property (nonatomic, strong) UICollectionView *collectionView;
 
+@property (nonatomic, strong) UILabel *titleLabel;
+@property (nonatomic, strong) UILabel *detailLabel;
+
 @end
 

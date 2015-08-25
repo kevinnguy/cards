@@ -15,11 +15,16 @@
 
 #import <UIColor+Chameleon.h>
 
-@interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate>
+@interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIGestureRecognizerDelegate, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIView *topView;
 
+@property (nonatomic, strong) KCNCardFlowLayout *cardFlowLayout;
+
 @property (nonatomic, strong) NSMutableArray *colorArray;
+@property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
+
+
 
 @end
 
@@ -37,7 +42,59 @@
     for (NSInteger i = 0; i < 20; i++) {
         [self.colorArray addObject:[UIColor randomFlatColor]];
     }
-    [self.collectionView reloadData];
+    
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(viewPanned:)];
+    panGesture.delegate = self;
+    [self.view addGestureRecognizer:panGesture];
+}
+
+- (void)viewPanned:(UIPanGestureRecognizer *)panGesture {
+    CGFloat progress = [panGesture translationInView:self.view].y / (float)CGRectGetHeight(self.view.bounds);
+    progress = MIN(1.0f, MAX(0.0f, -progress));
+    
+    
+    if ([panGesture locationInView:self.view].y < CGRectGetHeight(self.view.bounds) - self.cardFlowLayout.itemSize.height) {
+        return;
+    }
+    
+//    if (panGesture.state == UIGestureRecognizerStateBegan) {
+//        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+//        
+//        DetailViewController *detailViewController = [DetailViewController new];
+//        detailViewController.backgroundColor = self.topView.backgroundColor;
+//        detailViewController.dataSource = self.colorArray;
+//        
+//        NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[panGesture locationInView:self.collectionView]];
+//        detailViewController.dataSourceIndex = indexPath.item;
+//        
+//        [self.navigationController pushViewController:detailViewController animated:YES];
+//    } else if (panGesture.state == UIGestureRecognizerStateChanged) {
+//        [self.interactiveTransition updateInteractiveTransition:progress];
+//    } else if (panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) {
+//        if (progress < 0.5f) {
+//            [self.interactiveTransition cancelInteractiveTransition];
+//        } else {
+//            [self.interactiveTransition finishInteractiveTransition];
+//        }
+//        
+//        self.interactiveTransition = nil;
+//    }
+}
+
+- (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
+                          interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>)animationController {
+    return self.interactiveTransition;
+}
+
+
+// Implement these 2 methods to perform interactive transitions
+- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id <UIViewControllerAnimatedTransitioning>)animator{
+    return self.interactiveTransition;
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
+    CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
+    return fabs(velocity.y) > fabs(velocity.x);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -62,12 +119,24 @@
     self.topView.clipsToBounds = YES;
     self.topView.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1];
     [self.view addSubview:self.topView];
+    
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 250) / 2, 80, 250, 80)];
+    self.titleLabel.font = [UIFont systemFontOfSize:40];
+    self.titleLabel.text = @"3 Packages";
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.topView addSubview:self.titleLabel];
+    
+    self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 200) / 2, 160, 200, 30)];
+    self.detailLabel.font = [UIFont systemFontOfSize:18];
+    self.detailLabel.text = @"are ready for delivery";
+    self.detailLabel.textAlignment = NSTextAlignmentCenter;
+    [self.topView addSubview:self.detailLabel];
 }
 
 - (void)setupCollectionView {
-    KCNCardFlowLayout *layout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:self.view.bounds];
+    self.cardFlowLayout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:self.view.bounds];
     self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
-                                             collectionViewLayout:layout];
+                                             collectionViewLayout:self.cardFlowLayout];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[CustomCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CustomCollectionViewCell class])];

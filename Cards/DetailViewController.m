@@ -25,10 +25,25 @@
     
     self.view.backgroundColor = self.backgroundColor;
     
+    [self setupLabels];
     [self setupCollectionView];
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.dataSourceIndex inSection:0]
                                 atScrollPosition:UICollectionViewScrollPositionCenteredHorizontally
                                         animated:NO];
+}
+
+- (void)setupLabels {
+    self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 150) / 2, 20, 150, 20)];
+    self.titleLabel.font = [UIFont systemFontOfSize:18];
+    self.titleLabel.text = @"3 Packages";
+    self.titleLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.titleLabel];
+    
+    self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 150) / 2, 40, 150, 20)];
+    self.detailLabel.font = [UIFont systemFontOfSize:14];
+    self.detailLabel.text = @"are ready for delivery";
+    self.detailLabel.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:self.detailLabel];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
