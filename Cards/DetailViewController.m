@@ -25,6 +25,13 @@
     
     self.view.backgroundColor = self.backgroundColor;
     
+    self.closeButton = [[VBFPopFlatButton alloc] initWithFrame:CGRectMake(20, 30, 26, 26)
+                                                   buttonType:buttonDownBasicType
+                                                  buttonStyle:buttonPlainStyle
+                                        animateToInitialState:NO];
+    self.closeButton.tintColor = [UIColor blackColor];
+    [self.view addSubview:self.closeButton];
+    
     [self setupLabels];
     [self setupCollectionView];
     [self.collectionView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:self.dataSourceIndex inSection:0]

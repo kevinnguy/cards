@@ -6,6 +6,7 @@
 //  Copyright (c) 2015 kevinnguy. All rights reserved.
 //
 
+#import <VBFPopFlatButton.h>
 
 @import UIKit;
 
@@ -15,6 +16,8 @@
 
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
+
+@property (nonatomic, strong) VBFPopFlatButton *menuButton;
 
 @end
 

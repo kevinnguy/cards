@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+#import <VBFPopFlatButton.h>
+
+
 @interface DetailViewController : UIViewController
 
 @property (nonatomic, strong) UICollectionView *collectionView;
@@ -18,4 +21,5 @@
 @property (nonatomic, strong) UILabel *titleLabel;
 @property (nonatomic, strong) UILabel *detailLabel;
 
+@property (nonatomic, strong) VBFPopFlatButton *closeButton;
 @end

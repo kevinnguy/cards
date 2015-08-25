@@ -3,13 +3,19 @@ PODS:
     - ChameleonFramework/Default (= 1.2.1)
   - ChameleonFramework/Default (1.2.1)
   - LXReorderableCollectionViewFlowLayout (0.1.1)
+  - pop (1.0.7)
+  - VBFPopFlatButton (0.0.6):
+    - pop
 
 DEPENDENCIES:
   - ChameleonFramework (~> 1.2.1)
   - LXReorderableCollectionViewFlowLayout (~> 0.1.1)
+  - VBFPopFlatButton (~> 0.0.6)
 
 SPEC CHECKSUMS:
   ChameleonFramework: 3476f813ac1615aef0a9a958f05520dfca47e09d
   LXReorderableCollectionViewFlowLayout: c89e0f693744c5cb96718822a8455a7de99d90ea
+  pop: 628ffc631644601567ee8bfaaaea493ebd7d0923
+  VBFPopFlatButton: 782344da63f104c279a857d806e065117a7e1196
 
 COCOAPODS: 0.37.2

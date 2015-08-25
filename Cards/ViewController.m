@@ -131,6 +131,13 @@
     self.detailLabel.text = @"are ready for delivery";
     self.detailLabel.textAlignment = NSTextAlignmentCenter;
     [self.topView addSubview:self.detailLabel];
+    
+    self.menuButton = [[VBFPopFlatButton alloc] initWithFrame:CGRectMake(20, 40, 26, 26)
+                                                   buttonType:buttonMenuType
+                                                  buttonStyle:buttonPlainStyle
+                                        animateToInitialState:NO];
+    self.menuButton.tintColor = [UIColor blackColor];
+    [self.topView addSubview:self.menuButton];
 }
 
 - (void)setupCollectionView {

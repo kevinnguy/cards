@@ -62,9 +62,16 @@
     detailLabel.text = viewController.detailLabel.text;
     [containerView addSubview:detailLabel];
     
+    VBFPopFlatButton *menuButton = [[VBFPopFlatButton alloc] initWithFrame:viewController.menuButton.frame buttonType:viewController.menuButton.currentButtonType buttonStyle:viewController.menuButton.currentButtonStyle animateToInitialState:NO];
+    menuButton.tintColor = viewController.menuButton.tintColor;
+    [containerView addSubview:menuButton];
+    
     viewController.titleLabel.hidden = YES;
     viewController.detailLabel.hidden = YES;
+    viewController.menuButton.hidden = YES;
     
+    [menuButton animateToType:buttonDownBasicType];
+
     
     [UIView animateWithDuration:0.3f animations:^{
         KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:detailViewController.collectionView.frame];
@@ -83,14 +90,18 @@
         detailLabelFrame.origin.y = 39;
         detailLabel.frame = detailLabelFrame;
         
+        menuButton.frame = detailViewController.closeButton.frame;
     } completion:^(BOOL finished) {
         viewController.titleLabel.hidden = NO;
         viewController.detailLabel.hidden = NO;
+        viewController.menuButton.hidden = NO;
         detailViewController.view.hidden = NO;
         
         [cellSnapshot removeFromSuperview];
         [titleLabel removeFromSuperview];
         [detailLabel removeFromSuperview];
+        [menuButton removeFromSuperview];
+        
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
     }];
 }
@@ -113,11 +124,46 @@
         }
     }
     
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:detailViewController.titleLabel.frame];
+    titleLabel.font = detailViewController.titleLabel.font;
+    titleLabel.textAlignment = detailViewController.titleLabel.textAlignment;
+    titleLabel.text = detailViewController.titleLabel.text;
+    [containerView addSubview:titleLabel];
+    
+    UILabel *detailLabel = [[UILabel alloc] initWithFrame:detailViewController.detailLabel.frame];
+    detailLabel.font = detailViewController.detailLabel.font;
+    detailLabel.textAlignment = detailViewController.detailLabel.textAlignment;
+    detailLabel.text = detailViewController.detailLabel.text;
+    [containerView addSubview:detailLabel];
+    
+    VBFPopFlatButton *menuButton = [[VBFPopFlatButton alloc] initWithFrame:detailViewController.closeButton.frame buttonType:detailViewController.closeButton.currentButtonType buttonStyle:detailViewController.closeButton.currentButtonStyle animateToInitialState:NO];
+    menuButton.tintColor = detailViewController.closeButton.tintColor;
+    [containerView addSubview:menuButton];
+    
+    [menuButton animateToType:buttonMenuType];
+    
     [UIView animateWithDuration:0.3f animations:^{
         UICollectionViewLayoutAttributes *cellLayout = [viewController.collectionView.collectionViewLayout layoutAttributesForItemAtIndexPath:selectedIndexPath];
         cellSnapshot.frame = [containerView convertRect:cellLayout.frame fromView:viewController.collectionView];
+        
+        titleLabel.transform = CGAffineTransformScale(titleLabel.transform, 40.0f/18, 40.0f/18);
+        CGRect titleLabelFrame = titleLabel.frame;
+        titleLabelFrame.origin.y = 100;
+        titleLabel.frame = titleLabelFrame;
+        
+        detailLabel.transform = CGAffineTransformScale(detailLabel.transform, 18.0f/14, 18.0f/14);
+        CGRect detailLabelFrame = detailLabel.frame;
+        detailLabelFrame.origin.y = 164;
+        detailLabel.frame = detailLabelFrame;
+        
+        menuButton.frame = viewController.menuButton.frame;
     } completion:^(BOOL finished) {
         [cellSnapshot removeFromSuperview];
+        
+        [titleLabel removeFromSuperview];
+        [detailLabel removeFromSuperview];
+        [menuButton removeFromSuperview];
+        
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
     }];
 }
