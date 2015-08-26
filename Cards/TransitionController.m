@@ -69,6 +69,7 @@
     viewController.titleLabel.hidden = YES;
     viewController.detailLabel.hidden = YES;
     viewController.menuButton.hidden = YES;
+    viewController.cityButton.hidden = YES;
     
     [menuButton animateToType:buttonDownBasicType];
 
@@ -95,6 +96,7 @@
         viewController.titleLabel.hidden = NO;
         viewController.detailLabel.hidden = NO;
         viewController.menuButton.hidden = NO;
+        viewController.cityButton.hidden = NO;
         detailViewController.view.hidden = NO;
         
         [cellSnapshot removeFromSuperview];
@@ -142,6 +144,10 @@
     
     [menuButton animateToType:buttonMenuType];
     
+    viewController.titleLabel.hidden = YES;
+    viewController.detailLabel.hidden = YES;
+    viewController.menuButton.hidden = YES;
+    
     [UIView animateWithDuration:0.3f animations:^{
         UICollectionViewLayoutAttributes *cellLayout = [viewController.collectionView.collectionViewLayout layoutAttributesForItemAtIndexPath:selectedIndexPath];
         cellSnapshot.frame = [containerView convertRect:cellLayout.frame fromView:viewController.collectionView];
@@ -159,10 +165,13 @@
         menuButton.frame = viewController.menuButton.frame;
     } completion:^(BOOL finished) {
         [cellSnapshot removeFromSuperview];
-        
         [titleLabel removeFromSuperview];
         [detailLabel removeFromSuperview];
         [menuButton removeFromSuperview];
+        
+        viewController.titleLabel.hidden = NO;
+        viewController.detailLabel.hidden = NO;
+        viewController.menuButton.hidden = NO;
         
         [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
     }];

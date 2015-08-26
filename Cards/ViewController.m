@@ -18,13 +18,14 @@
 @interface ViewController () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UINavigationControllerDelegate, UIGestureRecognizerDelegate, UIViewControllerAnimatedTransitioning, UIViewControllerTransitioningDelegate>
 
 @property (nonatomic, strong) UIView *topView;
+@property (nonatomic, strong) UIImageView *menuView;
+@property (nonatomic, strong) UIImageView *cityView;
+@property (nonatomic, strong) UITapGestureRecognizer *dismissTapGesture;
 
 @property (nonatomic, strong) KCNCardFlowLayout *cardFlowLayout;
 
 @property (nonatomic, strong) NSMutableArray *colorArray;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
-
-
 
 @end
 
@@ -37,6 +38,15 @@
     [self setupTopView];
     [self setupCollectionView];
     
+    [self.view addSubview:self.menuButton];
+    [self.view addSubview:self.cityButton];
+    
+    [self setupCityView];
+    [self setupMenuView];
+    
+    self.dismissTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissTapGesturePressed:)];
+
+    
     // Color array
     self.colorArray = [NSMutableArray new];
     for (NSInteger i = 0; i < 20; i++) {
@@ -46,55 +56,6 @@
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(viewPanned:)];
     panGesture.delegate = self;
     [self.view addGestureRecognizer:panGesture];
-}
-
-- (void)viewPanned:(UIPanGestureRecognizer *)panGesture {
-    CGFloat progress = [panGesture translationInView:self.view].y / (float)CGRectGetHeight(self.view.bounds);
-    progress = MIN(1.0f, MAX(0.0f, -progress));
-    
-    
-    if ([panGesture locationInView:self.view].y < CGRectGetHeight(self.view.bounds) - self.cardFlowLayout.itemSize.height) {
-        return;
-    }
-    
-//    if (panGesture.state == UIGestureRecognizerStateBegan) {
-//        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
-//        
-//        DetailViewController *detailViewController = [DetailViewController new];
-//        detailViewController.backgroundColor = self.topView.backgroundColor;
-//        detailViewController.dataSource = self.colorArray;
-//        
-//        NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[panGesture locationInView:self.collectionView]];
-//        detailViewController.dataSourceIndex = indexPath.item;
-//        
-//        [self.navigationController pushViewController:detailViewController animated:YES];
-//    } else if (panGesture.state == UIGestureRecognizerStateChanged) {
-//        [self.interactiveTransition updateInteractiveTransition:progress];
-//    } else if (panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) {
-//        if (progress < 0.5f) {
-//            [self.interactiveTransition cancelInteractiveTransition];
-//        } else {
-//            [self.interactiveTransition finishInteractiveTransition];
-//        }
-//        
-//        self.interactiveTransition = nil;
-//    }
-}
-
-- (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
-                          interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>)animationController {
-    return self.interactiveTransition;
-}
-
-
-// Implement these 2 methods to perform interactive transitions
-- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id <UIViewControllerAnimatedTransitioning>)animator{
-    return self.interactiveTransition;
-}
-
-- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
-    CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
-    return fabs(velocity.y) > fabs(velocity.x);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -137,7 +98,14 @@
                                                   buttonStyle:buttonPlainStyle
                                         animateToInitialState:NO];
     self.menuButton.tintColor = [UIColor blackColor];
-    [self.topView addSubview:self.menuButton];
+    [self.menuButton addTarget:self action:@selector(menuButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    
+    self.cityButton = [[VBFPopFlatButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds) - 20 - 26, 40, 26, 26)
+                                                   buttonType:buttonUpTriangleType
+                                                  buttonStyle:buttonPlainStyle
+                                        animateToInitialState:NO];
+    self.cityButton.tintColor = [UIColor blackColor];
+    [self.cityButton addTarget:self action:@selector(cityButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 }
 
 - (void)setupCollectionView {
@@ -151,14 +119,121 @@
     [self.view addSubview:self.collectionView];
 }
 
+- (void)setupMenuView {
+    self.menuView = [[UIImageView alloc] initWithFrame:CGRectMake(-(CGRectGetWidth(self.view.bounds) - 100),
+                                                             0,
+                                                             CGRectGetWidth(self.view.bounds) - 100,
+                                                             CGRectGetHeight(self.view.bounds))];
+    self.menuView.contentMode = UIViewContentModeScaleAspectFill;
+    self.menuView.image = [UIImage imageNamed:@"menu"];
+    [self.view addSubview:self.menuView];
+}
+
+- (void)setupCityView {
+    self.cityView = [[UIImageView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds),
+                                                             0,
+                                                             CGRectGetWidth(self.view.bounds) - 100,
+                                                             CGRectGetHeight(self.view.bounds))];
+    self.cityView.contentMode = UIViewContentModeScaleAspectFill;
+    self.cityView.image = [UIImage imageNamed:@"city"];
+    [self.view addSubview:self.cityView];
+}
+
+#pragma mark - Buttons pressed
+- (void)menuButtonPressed:(id)sender {
+    [UIView animateWithDuration:0.3f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.menuView.frame = CGRectMake(0,
+                                         0,
+                                         CGRectGetWidth(self.view.bounds) - 100,
+                                         CGRectGetHeight(self.view.bounds));
+    } completion:^(BOOL finished) {
+        [self.view addGestureRecognizer:self.dismissTapGesture];
+    }];
+}
+
+- (void)cityButtonPressed:(id)sender {
+    [UIView animateWithDuration:0.3f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.cityView.frame = CGRectMake(100,
+                                         0,
+                                         CGRectGetWidth(self.view.bounds) - 100,
+                                         CGRectGetHeight(self.view.bounds));
+    } completion:^(BOOL finished) {
+        [self.view addGestureRecognizer:self.dismissTapGesture];
+    }];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+- (void)dismissTapGesturePressed:(id)gesture {
+    [UIView animateWithDuration:0.3f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.menuView.frame = CGRectMake(-(CGRectGetWidth(self.view.bounds) - 100),
+                                         0,
+                                         CGRectGetWidth(self.view.bounds) - 100,
+                                         CGRectGetHeight(self.view.bounds));
+        
+        self.cityView.frame = CGRectMake(CGRectGetWidth(self.view.bounds),
+                                         0,
+                                         CGRectGetWidth(self.view.bounds) - 100,
+                                         CGRectGetHeight(self.view.bounds));
+    } completion:^(BOOL finished) {
+        [self.view removeGestureRecognizer:self.dismissTapGesture];
+    }];
+}
+
+- (void)viewPanned:(UIPanGestureRecognizer *)panGesture {
+    CGFloat progress = [panGesture translationInView:self.view].y / (float)CGRectGetHeight(self.view.bounds);
+    progress = MIN(1.0f, MAX(0.0f, -progress));
+    
+    
+    if ([panGesture locationInView:self.view].y < CGRectGetHeight(self.view.bounds) - self.cardFlowLayout.itemSize.height) {
+        return;
+    }
+    
+    //    if (panGesture.state == UIGestureRecognizerStateBegan) {
+    //        self.interactiveTransition = [UIPercentDrivenInteractiveTransition new];
+    //
+    //        DetailViewController *detailViewController = [DetailViewController new];
+    //        detailViewController.backgroundColor = self.topView.backgroundColor;
+    //        detailViewController.dataSource = self.colorArray;
+    //
+    //        NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:[panGesture locationInView:self.collectionView]];
+    //        detailViewController.dataSourceIndex = indexPath.item;
+    //
+    //        [self.navigationController pushViewController:detailViewController animated:YES];
+    //    } else if (panGesture.state == UIGestureRecognizerStateChanged) {
+    //        [self.interactiveTransition updateInteractiveTransition:progress];
+    //    } else if (panGesture.state == UIGestureRecognizerStateEnded || panGesture.state == UIGestureRecognizerStateCancelled) {
+    //        if (progress < 0.5f) {
+    //            [self.interactiveTransition cancelInteractiveTransition];
+    //        } else {
+    //            [self.interactiveTransition finishInteractiveTransition];
+    //        }
+    //
+    //        self.interactiveTransition = nil;
+    //    }
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIPanGestureRecognizer *)panGestureRecognizer {
+    CGPoint velocity = [panGestureRecognizer velocityInView:self.view];
+    return fabs(velocity.y) > fabs(velocity.x);
+}
+
 #pragma mark - UINavigationControllerDelegate
+- (id <UIViewControllerInteractiveTransitioning>)navigationController:(UINavigationController *)navigationController
+                          interactionControllerForAnimationController:(id <UIViewControllerAnimatedTransitioning>)animationController {
+    return self.interactiveTransition;
+}
+
+// Implement these 2 methods to perform interactive transitions
+- (id <UIViewControllerInteractiveTransitioning>)interactionControllerForPresentation:(id <UIViewControllerAnimatedTransitioning>)animator{
+    return self.interactiveTransition;
+}
+
 - (id <UIViewControllerAnimatedTransitioning>)navigationController:(UINavigationController *)navigationController
                                    animationControllerForOperation:(UINavigationControllerOperation)operation
                                                 fromViewController:(UIViewController *)fromVC
                                                   toViewController:(UIViewController *)toVC {
     return [TransitionController new];
 }
-
 
 #pragma mark - UICollectionViewDataSource
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath

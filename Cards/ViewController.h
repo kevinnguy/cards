@@ -18,6 +18,7 @@
 @property (nonatomic, strong) UILabel *detailLabel;
 
 @property (nonatomic, strong) VBFPopFlatButton *menuButton;
+@property (nonatomic, strong) VBFPopFlatButton *cityButton;
 
 @end
 
