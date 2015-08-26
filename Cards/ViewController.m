@@ -27,6 +27,8 @@
 @property (nonatomic, strong) NSMutableArray *colorArray;
 @property (nonatomic, strong) UIPercentDrivenInteractiveTransition *interactiveTransition;
 
+@property (nonatomic, strong) UIButton *scheduleButton;
+
 @end
 
 @implementation ViewController
@@ -40,6 +42,14 @@
     
     [self.view addSubview:self.menuButton];
     [self.view addSubview:self.cityButton];
+    
+    self.scheduleButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.scheduleButton setTitle:@"Schedule Delivery" forState:UIControlStateNormal];
+    self.scheduleButton.backgroundColor = [UIColor colorWithRed:119.0f/255 green:226.0f/255 blue:198.0f/255 alpha:1];
+    self.scheduleButton.titleLabel.font = [UIFont systemFontOfSize:19];
+    self.scheduleButton.titleLabel.textColor = [UIColor whiteColor];
+    self.scheduleButton.frame = CGRectMake(0, CGRectGetHeight(self.view.bounds) - 56, CGRectGetWidth(self.view.bounds), 56);
+    [self.view addSubview:self.scheduleButton];
     
     [self setupCityView];
     [self setupMenuView];
@@ -111,8 +121,9 @@
 }
 
 - (void)setupCollectionView {
-    self.cardFlowLayout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:self.view.bounds];
-    self.collectionView = [[UICollectionView alloc] initWithFrame:self.view.bounds
+    CGRect frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 56);
+    self.cardFlowLayout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:frame];
+    self.collectionView = [[UICollectionView alloc] initWithFrame:frame
                                              collectionViewLayout:self.cardFlowLayout];
     self.collectionView.delegate = self;
     self.collectionView.dataSource = self;

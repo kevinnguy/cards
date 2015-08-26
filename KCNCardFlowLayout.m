@@ -26,11 +26,11 @@
         return nil;
     }
     
-    NSInteger itemWidth = 142;
-    NSInteger itemHeight = 254;
+    NSInteger itemWidth = 168;
+    NSInteger itemHeight = 250;
     
     self.minimumInteritemSpacing = 10.0f;
-    self.minimumLineSpacing = 2.0f;
+    self.minimumLineSpacing = 4.0f;
     
     self.itemSize = CGSizeMake(itemWidth, itemHeight);
     self.sectionInset = UIEdgeInsetsMake(CGRectGetHeight(frame) - itemHeight - self.minimumLineSpacing,
