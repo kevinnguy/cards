@@ -52,12 +52,14 @@
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:viewController.titleLabel.frame];
     titleLabel.font = viewController.titleLabel.font;
+    titleLabel.textColor = viewController.titleLabel.textColor;
     titleLabel.textAlignment = viewController.titleLabel.textAlignment;
     titleLabel.text = viewController.titleLabel.text;
     [containerView addSubview:titleLabel];
     
     UILabel *detailLabel = [[UILabel alloc] initWithFrame:viewController.detailLabel.frame];
     detailLabel.font = viewController.detailLabel.font;
+    detailLabel.textColor = viewController.detailLabel.textColor;
     detailLabel.textAlignment = viewController.detailLabel.textAlignment;
     detailLabel.text = viewController.detailLabel.text;
     [containerView addSubview:detailLabel];
@@ -128,12 +130,14 @@
     
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:detailViewController.titleLabel.frame];
     titleLabel.font = detailViewController.titleLabel.font;
+    titleLabel.textColor = detailViewController.titleLabel.textColor;
     titleLabel.textAlignment = detailViewController.titleLabel.textAlignment;
     titleLabel.text = detailViewController.titleLabel.text;
     [containerView addSubview:titleLabel];
     
     UILabel *detailLabel = [[UILabel alloc] initWithFrame:detailViewController.detailLabel.frame];
     detailLabel.font = detailViewController.detailLabel.font;
+    detailLabel.textColor = detailViewController.detailLabel.textColor;
     detailLabel.textAlignment = detailViewController.detailLabel.textAlignment;
     detailLabel.text = detailViewController.detailLabel.text;
     [containerView addSubview:detailLabel];

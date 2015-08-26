@@ -29,7 +29,7 @@
                                                    buttonType:buttonDownBasicType
                                                   buttonStyle:buttonPlainStyle
                                         animateToInitialState:NO];
-    self.closeButton.tintColor = [UIColor blackColor];
+    self.closeButton.tintColor = [UIColor whiteColor];
     [self.view addSubview:self.closeButton];
     
     [self setupLabels];
@@ -42,12 +42,14 @@
 - (void)setupLabels {
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 150) / 2, 20, 150, 20)];
     self.titleLabel.font = [UIFont systemFontOfSize:18];
+    self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.text = @"3 Packages";
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.titleLabel];
     
     self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 150) / 2, 40, 150, 20)];
     self.detailLabel.font = [UIFont systemFontOfSize:14];
+    self.detailLabel.textColor = [UIColor whiteColor];
     self.detailLabel.text = @"are ready for delivery";
     self.detailLabel.textAlignment = NSTextAlignmentCenter;
     [self.view addSubview:self.detailLabel];

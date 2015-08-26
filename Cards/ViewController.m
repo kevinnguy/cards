@@ -78,17 +78,19 @@
 - (void)setupTopView {
     self.topView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.topView.clipsToBounds = YES;
-    self.topView.backgroundColor = [UIColor colorWithWhite:0.9f alpha:1];
+    self.topView.backgroundColor = [UIColor colorWithRed:33.0f/255 green:47.0f/255 blue:75.0f/255 alpha:1];
     [self.view addSubview:self.topView];
     
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 250) / 2, 80, 250, 80)];
     self.titleLabel.font = [UIFont systemFontOfSize:40];
+    self.titleLabel.textColor = [UIColor whiteColor];
     self.titleLabel.text = @"3 Packages";
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     [self.topView addSubview:self.titleLabel];
     
     self.detailLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 200) / 2, 160, 200, 30)];
     self.detailLabel.font = [UIFont systemFontOfSize:18];
+    self.detailLabel.textColor = [UIColor whiteColor];
     self.detailLabel.text = @"are ready for delivery";
     self.detailLabel.textAlignment = NSTextAlignmentCenter;
     [self.topView addSubview:self.detailLabel];
@@ -97,14 +99,14 @@
                                                    buttonType:buttonMenuType
                                                   buttonStyle:buttonPlainStyle
                                         animateToInitialState:NO];
-    self.menuButton.tintColor = [UIColor blackColor];
+    self.menuButton.tintColor = [UIColor whiteColor];
     [self.menuButton addTarget:self action:@selector(menuButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     self.cityButton = [[VBFPopFlatButton alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds) - 20 - 26, 40, 26, 26)
                                                    buttonType:buttonUpTriangleType
                                                   buttonStyle:buttonPlainStyle
                                         animateToInitialState:NO];
-    self.cityButton.tintColor = [UIColor blackColor];
+    self.cityButton.tintColor = [UIColor whiteColor];
     [self.cityButton addTarget:self action:@selector(cityButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
 }
 
