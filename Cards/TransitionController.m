@@ -115,6 +115,9 @@
     [containerView addSubview:viewController.view];
     
     NSIndexPath *selectedIndexPath = [detailViewController.collectionView indexPathsForSelectedItems].firstObject;
+    if (!selectedIndexPath) {
+        selectedIndexPath = [NSIndexPath indexPathForItem:detailViewController.dataSourceIndex inSection:0];
+    }
     UICollectionViewCell *cell = [detailViewController.collectionView cellForItemAtIndexPath:selectedIndexPath];
     UIView *cellSnapshot = [cell snapshotViewAfterScreenUpdates:NO];
     cellSnapshot.frame = [containerView convertRect:cell.frame fromView:detailViewController.collectionView];

@@ -8,6 +8,7 @@
 
 #import "AppDelegate.h"
 
+#import "NavigationController.h"
 #import "ViewController.h"
 
 @interface AppDelegate ()
@@ -21,7 +22,7 @@
     // Override point for customization after application launch.
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
-    UINavigationController *navigationController = [[UINavigationController alloc] initWithRootViewController:[ViewController new]];
+    NavigationController *navigationController = [[NavigationController alloc] initWithRootViewController:[ViewController new]];
     navigationController.navigationBarHidden = YES;
     
     self.window.rootViewController = navigationController;

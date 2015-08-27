@@ -29,6 +29,8 @@
 
 @property (nonatomic, strong) UIButton *scheduleButton;
 
+@property (nonatomic, strong) UIView *rotateView;
+
 @end
 
 @implementation ViewController
@@ -54,12 +56,22 @@
     [self setupCityView];
     [self setupMenuView];
     
+    self.rotateView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetHeight(self.view.bounds), CGRectGetWidth(self.view.bounds))];
+    self.rotateView.backgroundColor = self.topView.backgroundColor;
+    UILabel *label = [[UILabel alloc] initWithFrame:self.rotateView.bounds];
+    label.numberOfLines = 0;
+    label.text = @"Kevin Nguy\n502 7th Street #88BJ\nSan Francisco, CA 94103";
+    label.textAlignment = NSTextAlignmentCenter;
+    label.font = [UIFont systemFontOfSize:50];
+    label.textColor = [UIColor whiteColor];
+    [self.rotateView addSubview:label];
+    
     self.dismissTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(dismissTapGesturePressed:)];
 
     
     // Color array
     self.colorArray = [NSMutableArray new];
-    for (NSInteger i = 0; i < 20; i++) {
+    for (NSInteger i = 0; i < 5; i++) {
         [self.colorArray addObject:[UIColor randomFlatColor]];
     }
     
@@ -82,6 +94,29 @@
 
 - (void)dealloc {
     self.navigationController.delegate = nil;
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [UIView setAnimationsEnabled:NO];
+
+    if (UIInterfaceOrientationIsLandscape(toInterfaceOrientation)) {
+        self.rotateView.alpha = 0;
+        [self.view addSubview:self.rotateView];
+
+        [UIView animateWithDuration:0.3f animations:^{
+            self.rotateView.alpha = 1;
+        }];
+    } else {
+        [UIView animateWithDuration:0.3f animations:^{
+            self.rotateView.alpha = 0;
+        } completion:^(BOOL finished) {
+            [self.rotateView removeFromSuperview];
+        }];
+    }
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [UIView setAnimationsEnabled:YES];
 }
 
 #pragma mark - View initialization
@@ -129,6 +164,8 @@
     self.collectionView.dataSource = self;
     [self.collectionView registerClass:[CustomCollectionViewCell class] forCellWithReuseIdentifier:NSStringFromClass([CustomCollectionViewCell class])];
     self.collectionView.backgroundColor = [UIColor clearColor];
+    self.collectionView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+
     [self.view addSubview:self.collectionView];
 }
 
@@ -154,8 +191,8 @@
 
 #pragma mark - Buttons pressed
 - (void)menuButtonPressed:(id)sender {
-    [UIView animateWithDuration:0.3f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.menuView.frame = CGRectMake(0,
+    [UIView animateWithDuration:0.4f delay:0 usingSpringWithDamping:0.7f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.menuView.frame = CGRectMake(-12,
                                          0,
                                          CGRectGetWidth(self.view.bounds) - 100,
                                          CGRectGetHeight(self.view.bounds));
@@ -165,8 +202,8 @@
 }
 
 - (void)cityButtonPressed:(id)sender {
-    [UIView animateWithDuration:0.3f delay:0 usingSpringWithDamping:0.8 initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.cityView.frame = CGRectMake(100,
+    [UIView animateWithDuration:0.4f delay:0 usingSpringWithDamping:0.7f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+        self.cityView.frame = CGRectMake(112,
                                          0,
                                          CGRectGetWidth(self.view.bounds) - 100,
                                          CGRectGetHeight(self.view.bounds));

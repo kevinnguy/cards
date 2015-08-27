@@ -13,6 +13,8 @@
 		0A3AB1F41B879CB400A65E42 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0A3AB1F31B879CB400A65E42 /* Images.xcassets */; };
 		0A3AB1F71B879CB400A65E42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A3AB1F51B879CB400A65E42 /* LaunchScreen.xib */; };
 		0A3AB2031B879CB400A65E42 /* CardsTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A3AB2021B879CB400A65E42 /* CardsTests.m */; };
+		0A892D711B8E5E150064C4F8 /* DetailCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A892D701B8E5E150064C4F8 /* DetailCollectionViewCell.m */; };
+		0A892D741B8F7AD10064C4F8 /* NavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A892D731B8F7AD10064C4F8 /* NavigationController.m */; };
 		0ABEA81E1B8B9BFA0050EF50 /* KCNCardFlowLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEA81D1B8B9BFA0050EF50 /* KCNCardFlowLayout.m */; };
 		0ABEA8211B8B9C7D0050EF50 /* CustomCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEA8201B8B9C7D0050EF50 /* CustomCollectionViewCell.m */; };
 		0ABEA8241B8BB6E40050EF50 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ABEA8231B8BB6E40050EF50 /* DetailViewController.m */; };
@@ -44,6 +46,10 @@
 		0A3AB1FC1B879CB400A65E42 /* CardsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CardsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A3AB2011B879CB400A65E42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0A3AB2021B879CB400A65E42 /* CardsTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CardsTests.m; sourceTree = "<group>"; };
+		0A892D6F1B8E5E150064C4F8 /* DetailCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailCollectionViewCell.h; sourceTree = "<group>"; };
+		0A892D701B8E5E150064C4F8 /* DetailCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailCollectionViewCell.m; sourceTree = "<group>"; };
+		0A892D721B8F7AD10064C4F8 /* NavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NavigationController.h; sourceTree = "<group>"; };
+		0A892D731B8F7AD10064C4F8 /* NavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NavigationController.m; sourceTree = "<group>"; };
 		0ABEA81C1B8B9BFA0050EF50 /* KCNCardFlowLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KCNCardFlowLayout.h; sourceTree = "<group>"; };
 		0ABEA81D1B8B9BFA0050EF50 /* KCNCardFlowLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KCNCardFlowLayout.m; sourceTree = "<group>"; };
 		0ABEA81F1B8B9C7D0050EF50 /* CustomCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomCollectionViewCell.h; sourceTree = "<group>"; };
@@ -110,8 +116,12 @@
 				0ABEA8231B8BB6E40050EF50 /* DetailViewController.m */,
 				0ABEA81F1B8B9C7D0050EF50 /* CustomCollectionViewCell.h */,
 				0ABEA8201B8B9C7D0050EF50 /* CustomCollectionViewCell.m */,
+				0A892D6F1B8E5E150064C4F8 /* DetailCollectionViewCell.h */,
+				0A892D701B8E5E150064C4F8 /* DetailCollectionViewCell.m */,
 				0ABEA8281B8BC3BB0050EF50 /* TransitionController.h */,
 				0ABEA8291B8BC3BB0050EF50 /* TransitionController.m */,
+				0A892D721B8F7AD10064C4F8 /* NavigationController.h */,
+				0A892D731B8F7AD10064C4F8 /* NavigationController.m */,
 				0A3AB1F31B879CB400A65E42 /* Images.xcassets */,
 				0A3AB1F51B879CB400A65E42 /* LaunchScreen.xib */,
 				0A3AB1E61B879CB400A65E42 /* Supporting Files */,
@@ -313,6 +323,8 @@
 				0A3AB1EC1B879CB400A65E42 /* AppDelegate.m in Sources */,
 				0ABEA81E1B8B9BFA0050EF50 /* KCNCardFlowLayout.m in Sources */,
 				0A3AB1E91B879CB400A65E42 /* main.m in Sources */,
+				0A892D711B8E5E150064C4F8 /* DetailCollectionViewCell.m in Sources */,
+				0A892D741B8F7AD10064C4F8 /* NavigationController.m in Sources */,
 				0ABEA8211B8B9C7D0050EF50 /* CustomCollectionViewCell.m in Sources */,
 				0ABEA8241B8BB6E40050EF50 /* DetailViewController.m in Sources */,
 			);
