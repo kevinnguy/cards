@@ -56,13 +56,13 @@
     
     CGFloat pageMarginX = (CGRectGetWidth(collectionViewFrame) - columnCount * self.itemSize.width - (columnCount > 1 ? (columnCount - 1) * self.minimumLineSpacing : 0)) / 2.0f;
     
-    NSUInteger page = indexPath.row / (rowCount * columnCount);
-    NSUInteger remainder = indexPath.row - page * (rowCount * columnCount);
+    NSUInteger page = indexPath.item / (rowCount * columnCount);
+    NSUInteger remainder = indexPath.item - page * (rowCount * columnCount);
     NSUInteger row = remainder / columnCount;
     NSUInteger column = remainder - row * columnCount;
     
     CGRect cellFrame = CGRectZero;
-    cellFrame.origin.x = pageMarginX + column * (self.itemSize.width + self.sectionInset.left);
+    cellFrame.origin.x = pageMarginX + column * (self.itemSize.width + self.minimumLineSpacing);
     cellFrame.origin.y = self.sectionInset.top;
     cellFrame.size.width = self.itemSize.width;
     cellFrame.size.height = self.itemSize.height;

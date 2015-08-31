@@ -70,10 +70,7 @@
 
     
     // Color array
-    self.colorArray = [NSMutableArray new];
-    for (NSInteger i = 0; i < 5; i++) {
-        [self.colorArray addObject:[UIColor randomFlatColor]];
-    }
+    self.colorArray = [@[[UIColor flatBlueColor], [UIColor flatForestGreenColor], [UIColor flatMagentaColor], [UIColor flatMintColor], [UIColor flatOrangeColor]] mutableCopy];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(viewPanned:)];
     panGesture.delegate = self;
@@ -191,25 +188,44 @@
 
 #pragma mark - Buttons pressed
 - (void)menuButtonPressed:(id)sender {
-    [UIView animateWithDuration:0.4f delay:0 usingSpringWithDamping:0.7f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.menuView.frame = CGRectMake(-12,
-                                         0,
-                                         CGRectGetWidth(self.view.bounds) - 100,
-                                         CGRectGetHeight(self.view.bounds));
-    } completion:^(BOOL finished) {
-        [self.view addGestureRecognizer:self.dismissTapGesture];
-    }];
+//    [UIView animateWithDuration:0.4f delay:0 usingSpringWithDamping:0.7f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//        self.menuView.frame = CGRectMake(-12,
+//                                         0,
+//                                         CGRectGetWidth(self.view.bounds) - 100,
+//                                         CGRectGetHeight(self.view.bounds));
+//    } completion:^(BOOL finished) {
+//        [self.view addGestureRecognizer:self.dismissTapGesture];
+//    }];
+
+    
+    [self.collectionView performBatchUpdates:^{
+        [self.colorArray removeObjectsInRange:NSMakeRange(0, 3)];
+        [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]];
+        
+    } completion:nil];
+    
+    [self.collectionView performBatchUpdates:^{
+        [self.colorArray insertObjects:@[[UIColor randomFlatColor], [UIColor randomFlatColor], [UIColor randomFlatColor]]
+                             atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
+        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]];
+    } completion:nil];
 }
 
 - (void)cityButtonPressed:(id)sender {
-    [UIView animateWithDuration:0.4f delay:0 usingSpringWithDamping:0.7f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
-        self.cityView.frame = CGRectMake(112,
-                                         0,
-                                         CGRectGetWidth(self.view.bounds) - 100,
-                                         CGRectGetHeight(self.view.bounds));
-    } completion:^(BOOL finished) {
-        [self.view addGestureRecognizer:self.dismissTapGesture];
-    }];
+//    [UIView animateWithDuration:0.4f delay:0 usingSpringWithDamping:0.7f initialSpringVelocity:0 options:UIViewAnimationOptionCurveEaseOut animations:^{
+//        self.cityView.frame = CGRectMake(112,
+//                                         0,
+//                                         CGRectGetWidth(self.view.bounds) - 100,
+//                                         CGRectGetHeight(self.view.bounds));
+//    } completion:^(BOOL finished) {
+//        [self.view addGestureRecognizer:self.dismissTapGesture];
+//    }];
+//    self.colorArray = [@[[UIColor flatBlueColor], [UIColor flatPlumColor], [UIColor flatMagentaColor], [UIColor flatPinkColor], [UIColor flatPowderBlueColor]] mutableCopy];
+//    [self.collectionView reloadData];
+    [self.collectionView performBatchUpdates:^{
+        [self.colorArray insertObject:[UIColor randomFlatColor] atIndex:1];
+        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:1 inSection:0]]];
+    } completion:nil];
 }
 
 #pragma mark - UIGestureRecognizerDelegate
