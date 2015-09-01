@@ -198,17 +198,29 @@
 //    }];
 
     
-    [self.collectionView performBatchUpdates:^{
-        [self.colorArray removeObjectsInRange:NSMakeRange(0, 3)];
-        [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]];
-        
-    } completion:nil];
+//    [self.collectionView performBatchUpdates:^{
+//        [self.colorArray removeObjectsInRange:NSMakeRange(0, 3)];
+//        [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]];
+//        
+//    } completion:nil];
+//    
+//    [self.collectionView performBatchUpdates:^{
+//        [self.colorArray insertObjects:@[[UIColor randomFlatColor], [UIColor randomFlatColor], [UIColor randomFlatColor]]
+//                             atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
+//        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]];
+//    } completion:nil];
     
-    [self.collectionView performBatchUpdates:^{
-        [self.colorArray insertObjects:@[[UIColor randomFlatColor], [UIColor randomFlatColor], [UIColor randomFlatColor]]
-                             atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, 3)]];
-        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:0 inSection:0], [NSIndexPath indexPathForItem:1 inSection:0], [NSIndexPath indexPathForItem:2 inSection:0]]];
-    } completion:nil];
+    NSArray *cells = [self.collectionView visibleCells];
+    for (UICollectionViewCell *cell in cells) {
+        [UIView animateWithDuration:0.14f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+            cell.transform = CGAffineTransformMakeTranslation(0, -40);
+        } completion:^(BOOL finished) {
+            [UIView animateWithDuration:0.14f delay:0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
+                cell.transform = CGAffineTransformIdentity;
+            } completion:nil];
+        }];
+    }
+    
 }
 
 - (void)cityButtonPressed:(id)sender {
