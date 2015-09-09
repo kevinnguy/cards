@@ -318,6 +318,7 @@
 {
     CustomCollectionViewCell *cell = (CustomCollectionViewCell *)[collectionView dequeueReusableCellWithReuseIdentifier:NSStringFromClass([CustomCollectionViewCell class]) forIndexPath:indexPath];
     cell.backgroundColor = self.colorArray[indexPath.item];
+    
     return cell;
 }
 
@@ -336,6 +337,16 @@
     [self.navigationController pushViewController:detailViewController animated:YES];
 }
 
+//- (void)collectionView:(UICollectionView *)collectionView didHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+//    CustomCollectionViewCell *cell = (CustomCollectionViewCell *)[collectionView cellForItemAtIndexPath:indexPath];
+//    
+//    [UIView animateWithDuration:0.2f animations:^{
+//        CATransform3D transformation = CATransform3DIdentity;
+//        transformation.m14 = 0;
+//        transformation.m24 = -0.0003;
+//        cell.layer.transform = transformation;
+//    }];
+//}
 
 #pragma mark - LXReorderableCollectionViewDataSource methods
 

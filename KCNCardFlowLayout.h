@@ -10,7 +10,8 @@
 
 #import "LXReorderableCollectionViewFlowLayout.h"
 
-@interface KCNCardFlowLayout : LXReorderableCollectionViewFlowLayout
+//@interface KCNCardFlowLayout : LXReorderableCollectionViewFlowLayout
+@interface KCNCardFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
 
 - (instancetype)initWithCollectionViewFrame:(CGRect)frame;
 

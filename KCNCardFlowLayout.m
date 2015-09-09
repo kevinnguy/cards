@@ -8,7 +8,7 @@
 
 #import "KCNCardFlowLayout.h"
 
-@interface KCNCardFlowLayout ()
+@interface KCNCardFlowLayout () 
 
 @property (nonatomic, strong) NSMutableArray *deleteIndexPaths;
 @property (nonatomic, strong) NSMutableArray *insertIndexPaths;
@@ -17,6 +17,11 @@
 @property (nonatomic, strong) UIDynamicAnimator *dynamicAnimator;
 @property (nonatomic, strong) NSMutableSet *visibleIndexPathsSet;
 @property (nonatomic, assign) CGFloat latestDelta;
+
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
+
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
 @end
 
@@ -55,9 +60,61 @@
     self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithCollectionViewLayout:self];
     self.visibleIndexPathsSet = [NSMutableSet set];
     
+    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+    self.longPressGestureRecognizer.delegate = self;
+    self.longPressGestureRecognizer.minimumPressDuration = 0.2f;
+    [self.collectionView addGestureRecognizer:self.longPressGestureRecognizer];
+    for (UIGestureRecognizer *gestureRecognizer in self.collectionView.gestureRecognizers) {
+        if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
+            [gestureRecognizer requireGestureRecognizerToFail:self.longPressGestureRecognizer];
+        }
+    }
+    
+    self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
+    self.panGestureRecognizer.delegate = self;
+    [self.collectionView addGestureRecognizer:self.panGestureRecognizer];
+    
     return self;
 }
 
+- (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"begin pan gesture");
+    } else if (recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateEnded) {
+        NSLog(@"end pan gesture");
+    }
+}
+
+- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"begin long press");
+        self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[recognizer locationInView:self.collectionView]];
+        [self invalidateLayout];
+    } else if (recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateEnded) {
+        NSLog(@"end long press");
+        self.selectedIndexPath = nil;
+    }
+}
+
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    if ([self.panGestureRecognizer isEqual:gestureRecognizer]) {
+        return (self.selectedIndexPath != nil);
+    }
+    return YES;
+}
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    if ([self.longPressGestureRecognizer isEqual:gestureRecognizer]) {
+        return [self.panGestureRecognizer isEqual:otherGestureRecognizer];
+    }
+    
+    if ([self.panGestureRecognizer isEqual:gestureRecognizer]) {
+        return [self.longPressGestureRecognizer isEqual:otherGestureRecognizer];
+    }
+    
+    return NO;
+}
 - (void)prepareLayout {
     [super prepareLayout];
     
