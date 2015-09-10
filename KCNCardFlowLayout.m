@@ -60,29 +60,90 @@
     self.dynamicAnimator = [[UIDynamicAnimator alloc] initWithCollectionViewLayout:self];
     self.visibleIndexPathsSet = [NSMutableSet set];
     
-    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-    self.longPressGestureRecognizer.delegate = self;
-    self.longPressGestureRecognizer.minimumPressDuration = 0.2f;
-    [self.collectionView addGestureRecognizer:self.longPressGestureRecognizer];
-    for (UIGestureRecognizer *gestureRecognizer in self.collectionView.gestureRecognizers) {
-        if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
-            [gestureRecognizer requireGestureRecognizerToFail:self.longPressGestureRecognizer];
-        }
-    }
-    
+    [self addObserver:self forKeyPath:@"collectionView" options:NSKeyValueObservingOptionNew context:nil];
+
+    return self;
+}
+
+- (void)dealloc {
+    [self removeObserver:self forKeyPath:@"collectionView"];
+}
+
+- (void)setupCollectionView {
+//    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
+//    self.longPressGestureRecognizer.delegate = self;
+//    self.longPressGestureRecognizer.minimumPressDuration = 0.2f;
+//    [self.collectionView addGestureRecognizer:self.longPressGestureRecognizer];
+//    for (UIGestureRecognizer *gestureRecognizer in self.collectionView.gestureRecognizers) {
+//        if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
+//            [gestureRecognizer requireGestureRecognizerToFail:self.longPressGestureRecognizer];
+//        }
+//    }
+//    
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     self.panGestureRecognizer.delegate = self;
     [self.collectionView addGestureRecognizer:self.panGestureRecognizer];
-    
-    return self;
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"collectionView"] && self.collectionView) {
+        [self setupCollectionView];
+    } else  {
+        [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+    }
 }
 
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        NSLog(@"begin pan gesture");
+        self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[recognizer locationInView:self.collectionView]];
+        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
+        
+        [UIView animateWithDuration:0.2f animations:^{
+            cell.layer.transform = [self transformCell:cell withGestureRecognizer:recognizer];
+        }];
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
+        cell.layer.transform = [self transformCell:cell withGestureRecognizer:recognizer];
     } else if (recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateEnded) {
-        NSLog(@"end pan gesture");
+        UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
+        
+        [UIView animateWithDuration:0.2f animations:^{
+            cell.layer.transform = CATransform3DIdentity;
+        }];
+
+        self.selectedIndexPath = nil;
     }
+}
+
+- (CATransform3D)transformCell:(UICollectionViewCell *)cell withGestureRecognizer:(UIGestureRecognizer *)recognizer {
+    // Get point and set its max to cell size's width
+    CGPoint point = [recognizer locationInView:cell];
+    point = CGPointMake(MAX(0, MIN(point.x, self.itemSize.width)), MAX(0, MIN(point.y, self.itemSize.height)));
+    
+    // Get cell's center
+    CGPoint cellCenter = CGPointMake(self.itemSize.width / 2, self.itemSize.height / 2);
+    
+    // Start transformation
+    CATransform3D transformation = CATransform3DIdentity;
+    
+    CGFloat tiltPerspective = 0.0003;
+    if (point.x <= cellCenter.x) {
+        // As finger pans left, m14 increases negatively
+        transformation.m14 = -tiltPerspective * (cellCenter.x - point.x) / cellCenter.x;
+    } else {
+        // As finger pans right, m14 increases positively
+        transformation.m14 = tiltPerspective * (point.x - cellCenter.x) / cellCenter.x;
+    }
+    
+    if (point.y <= cellCenter.y) {
+        // As finger pans up, m24 increases negatively
+        transformation.m24 = -tiltPerspective * (cellCenter.y - point.y) / cellCenter.y;
+    } else {
+        // As finger pans down, m24 increases positively
+        transformation.m24 = tiltPerspective * (point.y - cellCenter.y) / cellCenter.y;
+    }
+    
+    return transformation;
 }
 
 - (void)handleLongPressGesture:(UILongPressGestureRecognizer *)recognizer {
@@ -98,22 +159,19 @@
 
 
 - (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    if ([self.panGestureRecognizer isEqual:gestureRecognizer]) {
-        return (self.selectedIndexPath != nil);
-    }
     return YES;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-    if ([self.longPressGestureRecognizer isEqual:gestureRecognizer]) {
-        return [self.panGestureRecognizer isEqual:otherGestureRecognizer];
-    }
+//    if ([self.longPressGestureRecognizer isEqual:gestureRecognizer]) {
+//        return [self.panGestureRecognizer isEqual:otherGestureRecognizer];
+//    }
+//    
+//    if ([self.panGestureRecognizer isEqual:gestureRecognizer]) {
+//        return [self.longPressGestureRecognizer isEqual:otherGestureRecognizer];
+//    }
     
-    if ([self.panGestureRecognizer isEqual:gestureRecognizer]) {
-        return [self.longPressGestureRecognizer isEqual:otherGestureRecognizer];
-    }
-    
-    return NO;
+    return YES;
 }
 - (void)prepareLayout {
     [super prepareLayout];
