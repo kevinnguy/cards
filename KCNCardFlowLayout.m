@@ -46,8 +46,7 @@
     NSInteger itemWidth = 168;
     NSInteger itemHeight = 250;
     
-    self.minimumInteritemSpacing = 10.0f;
-    self.minimumLineSpacing = 6.0f;
+    self.minimumLineSpacing = 10.0f;
     
     self.itemSize = CGSizeMake(itemWidth, itemHeight);
     self.sectionInset = UIEdgeInsetsMake(CGRectGetHeight(frame) - itemHeight - self.minimumLineSpacing,
@@ -126,7 +125,7 @@
     // Start transformation
     CATransform3D transformation = CATransform3DIdentity;
     
-    CGFloat tiltPerspective = 0.0003;
+    CGFloat tiltPerspective = 0.0004;
     if (point.x <= cellCenter.x) {
         // As finger pans left, m14 increases negatively
         transformation.m14 = -tiltPerspective * (cellCenter.x - point.x) / cellCenter.x;
