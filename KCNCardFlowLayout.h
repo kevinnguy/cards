@@ -10,6 +10,9 @@
 
 @interface KCNCardFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
 
-- (instancetype)initWithCollectionViewFrame:(CGRect)frame itemSize:(CGSize)itemSize lineSpacing:(CGFloat)lineSpacing;
+- (instancetype)initWithCollectionViewFrame:(CGRect)frame
+                                   itemSize:(CGSize)itemSize
+                                lineSpacing:(CGFloat)lineSpacing
+                            springResistance:(CGFloat)springIntensity;
 
 @end

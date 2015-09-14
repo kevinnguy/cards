@@ -72,6 +72,10 @@
     // Color array
     self.colorArray = [@[[UIColor flatBlueColor], [UIColor flatForestGreenColor], [UIColor flatMagentaColor], [UIColor flatMintColor], [UIColor flatOrangeColor]] mutableCopy];
     
+    for (int i = 0; i < 5; i++) {
+        [self.colorArray addObject:[UIColor randomFlatColor]];
+    }
+    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(viewPanned:)];
     panGesture.delegate = self;
     [self.view addGestureRecognizer:panGesture];
@@ -87,10 +91,6 @@
     if (self.navigationController.delegate == self) {
         self.navigationController.delegate = nil;
     }
-}
-
-- (void)viewWillLayoutSubviews {
-    [super viewWillLayoutSubviews];
 }
 
 - (void)dealloc {
@@ -159,7 +159,7 @@
 
 - (void)setupCollectionView {
     CGRect frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 56);
-    self.cardFlowLayout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:frame itemSize:CGSizeMake(150, 250) lineSpacing:20.0f];
+    self.cardFlowLayout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:frame itemSize:CGSizeMake(150, 250) lineSpacing:20.0f springResistance:1000.0f];
     self.collectionView = [[UICollectionView alloc] initWithFrame:frame
                                              collectionViewLayout:self.cardFlowLayout];
     self.collectionView.delegate = self;

@@ -66,9 +66,7 @@
     cellFrame.origin.y = self.minimumLineSpacing;
     cellFrame.size.width = self.itemSize.width;
     cellFrame.size.height = self.itemSize.height;
-    
-    NSLog(@"indexpath: %@", indexPath.description);
-    
+        
     return cellFrame;
 }
 

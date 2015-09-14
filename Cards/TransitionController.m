@@ -124,12 +124,10 @@
     [containerView addSubview:cellSnapshot];
     
     if (detailViewController.dataSourceIndex != selectedIndexPath.item) {
-        NSInteger visibleCellsCount = [viewController.collectionView visibleCells].count;
-        if (detailViewController.dataSourceIndex < selectedIndexPath.item - 1) {
-//            [viewController.collectionView scrollRectToVisible:CGRectMake(150 * selectedIndexPath.item, 0, CGRectGetWidth(viewController.collectionView.frame), CGRectGetHeight(viewController.collectionView.frame)) animated:NO];
+        NSInteger cellOffset = [viewController.collectionView visibleCells].count - 2;
+        if (detailViewController.dataSourceIndex < selectedIndexPath.item - cellOffset) {
             [viewController.collectionView scrollToItemAtIndexPath:selectedIndexPath atScrollPosition:UICollectionViewScrollPositionRight animated:NO];
-        } else if (detailViewController.dataSourceIndex > selectedIndexPath.item + 1) {
-//            [viewController.collectionView scrollRectToVisible:CGRectMake(150 * selectedIndexPath.item, 0, CGRectGetWidth(viewController.collectionView.frame), CGRectGetHeight(viewController.collectionView.frame)) animated:NO];
+        } else if (detailViewController.dataSourceIndex > selectedIndexPath.item + cellOffset) {
             [viewController.collectionView scrollToItemAtIndexPath:selectedIndexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
     }
