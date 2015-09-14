@@ -89,6 +89,10 @@
     }
 }
 
+- (void)viewWillLayoutSubviews {
+    [super viewWillLayoutSubviews];
+}
+
 - (void)dealloc {
     self.navigationController.delegate = nil;
 }
@@ -120,7 +124,8 @@
 - (void)setupTopView {
     self.topView = [[UIView alloc] initWithFrame:self.view.bounds];
     self.topView.clipsToBounds = YES;
-    self.topView.backgroundColor = [UIColor colorWithRed:33.0f/255 green:47.0f/255 blue:75.0f/255 alpha:1];
+    self.topView.backgroundColor = [UIColor colorWithRed:43.0f/255 green:57.0f/255 blue:85.0f/255 alpha:1];
+//    self.topView.backgroundColor = [UIColor colorWithWhite:0.93f alpha:1];
     [self.view addSubview:self.topView];
     
     self.titleLabel = [[UILabel alloc] initWithFrame:CGRectMake((CGRectGetWidth(self.view.bounds) - 250) / 2, 80, 250, 80)];
@@ -154,7 +159,7 @@
 
 - (void)setupCollectionView {
     CGRect frame = CGRectMake(0, 0, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 56);
-    self.cardFlowLayout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:frame];
+    self.cardFlowLayout = [[KCNCardFlowLayout alloc] initWithCollectionViewFrame:frame itemSize:CGSizeMake(150, 250) lineSpacing:20.0f];
     self.collectionView = [[UICollectionView alloc] initWithFrame:frame
                                              collectionViewLayout:self.cardFlowLayout];
     self.collectionView.delegate = self;

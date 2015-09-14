@@ -95,7 +95,7 @@
 
 - (void)setupCollectionView {
     CGRect collectionViewFrame = CGRectMake(0, 68, CGRectGetWidth(self.view.bounds), CGRectGetHeight(self.view.bounds) - 68 - 56);
-    KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:collectionViewFrame];
+    KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:collectionViewFrame lineSpacing:4.0f];
     self.collectionView = [[UICollectionView alloc] initWithFrame:collectionViewFrame
                                              collectionViewLayout:layout];
     self.collectionView.delegate = self;

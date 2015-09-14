@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface KCNLargeCardFlowLayout : UICollectionViewFlowLayout
-- (instancetype)initWithCollectionViewFrame:(CGRect)frame;
+
+- (instancetype)initWithCollectionViewFrame:(CGRect)frame lineSpacing:(CGFloat)lineSpacing;
 
 @end

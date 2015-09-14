@@ -8,11 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-#import "LXReorderableCollectionViewFlowLayout.h"
-
-//@interface KCNCardFlowLayout : LXReorderableCollectionViewFlowLayout
 @interface KCNCardFlowLayout : UICollectionViewFlowLayout <UIGestureRecognizerDelegate>
 
-- (instancetype)initWithCollectionViewFrame:(CGRect)frame;
+- (instancetype)initWithCollectionViewFrame:(CGRect)frame itemSize:(CGSize)itemSize lineSpacing:(CGFloat)lineSpacing;
 
 @end

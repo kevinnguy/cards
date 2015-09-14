@@ -12,26 +12,26 @@
 
 @property (nonatomic, strong) NSMutableArray *deleteIndexPaths;
 @property (nonatomic, strong) NSMutableArray *insertIndexPaths;
+@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
 // Cell animation
 @property (nonatomic, strong) UIDynamicAnimator *dynamicAnimator;
 @property (nonatomic, strong) NSMutableSet *visibleIndexPathsSet;
 @property (nonatomic, assign) CGFloat latestDelta;
 
-@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
+// Tilt cell pan gesture
 @property (nonatomic, strong) UIPanGestureRecognizer *panGestureRecognizer;
-
-@property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
 @end
 
 @implementation KCNCardFlowLayout
 
+#pragma mark - Lifecycle
 - (instancetype)init {
-    return [self initWithCollectionViewFrame:CGRectZero];
+    return [self initWithCollectionViewFrame:CGRectZero itemSize:CGSizeZero lineSpacing:0];
 }
 
-- (instancetype)initWithCollectionViewFrame:(CGRect)frame {
+- (instancetype)initWithCollectionViewFrame:(CGRect)frame itemSize:(CGSize)itemSize lineSpacing:(CGFloat)lineSpacing {
     self = [super init];
     if (!self) {
         NSLog(@"KCNCardFlowLayout returned nil because self is nil");
@@ -43,10 +43,10 @@
         return nil;
     }
     
-    NSInteger itemWidth = 168;
-    NSInteger itemHeight = 250;
+    NSInteger itemWidth = itemSize.width;
+    NSInteger itemHeight = itemSize.height;
     
-    self.minimumLineSpacing = 10.0f;
+    self.minimumLineSpacing = lineSpacing;
     
     self.itemSize = CGSizeMake(itemWidth, itemHeight);
     self.sectionInset = UIEdgeInsetsMake(CGRectGetHeight(frame) - itemHeight - self.minimumLineSpacing,
@@ -69,21 +69,12 @@
 }
 
 - (void)setupCollectionView {
-//    self.longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(handleLongPressGesture:)];
-//    self.longPressGestureRecognizer.delegate = self;
-//    self.longPressGestureRecognizer.minimumPressDuration = 0.2f;
-//    [self.collectionView addGestureRecognizer:self.longPressGestureRecognizer];
-//    for (UIGestureRecognizer *gestureRecognizer in self.collectionView.gestureRecognizers) {
-//        if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
-//            [gestureRecognizer requireGestureRecognizerToFail:self.longPressGestureRecognizer];
-//        }
-//    }
-//    
     self.panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(handlePanGesture:)];
     self.panGestureRecognizer.delegate = self;
     [self.collectionView addGestureRecognizer:self.panGestureRecognizer];
 }
 
+#pragma mark - KVC
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([keyPath isEqualToString:@"collectionView"] && self.collectionView) {
         [self setupCollectionView];
@@ -92,6 +83,7 @@
     }
 }
 
+#pragma mark - Gesture recognizers
 - (void)handlePanGesture:(UIPanGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
         self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[recognizer locationInView:self.collectionView]];
@@ -99,12 +91,23 @@
         
         [UIView animateWithDuration:0.2f animations:^{
             cell.layer.transform = [self transformCell:cell withGestureRecognizer:recognizer];
+            cell.layer.shadowOffset = CGSizeZero;
+            cell.layer.shadowRadius = 10;
+            cell.layer.shadowOpacity = 1;
+            cell.layer.shadowColor = [UIColor colorWithWhite:0 alpha:0.5f].CGColor;
         }];
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
         UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
         cell.layer.transform = [self transformCell:cell withGestureRecognizer:recognizer];
     } else if (recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateEnded) {
         UICollectionViewCell *cell = [self.collectionView cellForItemAtIndexPath:self.selectedIndexPath];
+        
+        CABasicAnimation *anim = [CABasicAnimation animationWithKeyPath:@"shadowOpacity"];
+        anim.fromValue = @1;
+        anim.toValue = @0;
+        anim.duration = 0.5f;
+        [cell.layer addAnimation:anim forKey:@"shadowOpacity"];
+        cell.layer.shadowOpacity = 0;
         
         [UIView animateWithDuration:0.2f animations:^{
             cell.layer.transform = CATransform3DIdentity;
@@ -124,6 +127,8 @@
     
     // Start transformation
     CATransform3D transformation = CATransform3DIdentity;
+    transformation.m11 = 1.12f;
+    transformation.m22 = 1.12f;
     
     CGFloat tiltPerspective = 0.0004;
     if (point.x <= cellCenter.x) {
@@ -145,36 +150,17 @@
     return transformation;
 }
 
-- (void)handleLongPressGesture:(UILongPressGestureRecognizer *)recognizer {
-    if (recognizer.state == UIGestureRecognizerStateBegan) {
-        NSLog(@"begin long press");
-        self.selectedIndexPath = [self.collectionView indexPathForItemAtPoint:[recognizer locationInView:self.collectionView]];
-        [self invalidateLayout];
-    } else if (recognizer.state == UIGestureRecognizerStateCancelled || recognizer.state == UIGestureRecognizerStateEnded) {
-        NSLog(@"end long press");
-        self.selectedIndexPath = nil;
-    }
-}
-
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    return YES;
-}
-
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
-//    if ([self.longPressGestureRecognizer isEqual:gestureRecognizer]) {
-//        return [self.panGestureRecognizer isEqual:otherGestureRecognizer];
-//    }
-//    
-//    if ([self.panGestureRecognizer isEqual:gestureRecognizer]) {
-//        return [self.longPressGestureRecognizer isEqual:otherGestureRecognizer];
-//    }
-    
     return YES;
 }
+
+#pragma mark - UICollectionViewLayout
 - (void)prepareLayout {
     [super prepareLayout];
-    
+    [self setupCellScrollBounce];
+}
+
+- (void)setupCellScrollBounce {
     // Need to overflow our actual visible rect slightly to avoid flickering.
     CGRect visibleRect = CGRectInset((CGRect){.origin = self.collectionView.bounds.origin, .size = self.collectionView.frame.size}, -200, -200);
     
@@ -238,6 +224,8 @@
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)oldBounds {
+    // Update cell bounce animation when scrolling
+    
     UIScrollView *scrollView = self.collectionView;
     CGFloat delta = oldBounds.origin.x - scrollView.bounds.origin.x;
     
@@ -284,12 +272,13 @@
 - (void)finalizeCollectionViewUpdates {
     [super finalizeCollectionViewUpdates];
     
-    // release the insert and delete index paths
+    // Release the insert and delete index paths
     self.deleteIndexPaths = nil;
     self.insertIndexPaths = nil;
 }
 
 - (UICollectionViewLayoutAttributes *)initialLayoutAttributesForAppearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
+    // When adding item, animate cell "popping out"
     UICollectionViewLayoutAttributes *attributes = [super initialLayoutAttributesForAppearingItemAtIndexPath:itemIndexPath];
     if ([self.insertIndexPaths containsObject:itemIndexPath]) {
         if (!attributes) {
@@ -303,6 +292,7 @@
 }
 
 - (UICollectionViewLayoutAttributes *)finalLayoutAttributesForDisappearingItemAtIndexPath:(NSIndexPath *)itemIndexPath {
+    // When removing item, animate cell "shrinking" to its center
     UICollectionViewLayoutAttributes *attributes = [super finalLayoutAttributesForDisappearingItemAtIndexPath:itemIndexPath];
     if ([self.deleteIndexPaths containsObject:itemIndexPath]) {
         if (!attributes) {

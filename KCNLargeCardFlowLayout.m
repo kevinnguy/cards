@@ -10,24 +10,24 @@
 
 @implementation KCNLargeCardFlowLayout
 
+#pragma mark - Lifecycle
 - (instancetype)init {
-    return [self initWithCollectionViewFrame:CGRectZero];
+    return [self initWithCollectionViewFrame:CGRectZero lineSpacing:0];
 }
 
-- (instancetype)initWithCollectionViewFrame:(CGRect)frame {
+- (instancetype)initWithCollectionViewFrame:(CGRect)frame lineSpacing:(CGFloat)lineSpacing {
     self = [super init];
     if (!self) {
-        NSLog(@"KCNCardFlowLayout returned nil because self is nil");
+        NSLog(@"KCNLargeCardFlowLayout returned nil because self is nil");
         return nil;
     }
     
     if (CGRectEqualToRect(frame, CGRectZero)) {
-        NSLog(@"KCNCardFlowLayout returned nil because frame is CGRectZero");
+        NSLog(@"KCNLargeCardFlowLayout returned nil because frame is CGRectZero");
         return nil;
     }
     
-    self.minimumInteritemSpacing = 10.0f;
-    self.minimumLineSpacing = 4.0f;
+    self.minimumLineSpacing = lineSpacing;
     
     self.itemSize = CGSizeMake(CGRectGetWidth(frame) - (self.minimumLineSpacing * 2),
                                CGRectGetHeight(frame) - (self.minimumLineSpacing * 2));
@@ -43,33 +43,31 @@
     return self;
 }
 
-- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)oldBounds {
-    return NO;
+#pragma mark - UICollectionViewLayout
+- (CGSize)collectionViewContentSize {
+    NSUInteger count = [self.collectionView.dataSource collectionView:self.collectionView numberOfItemsInSection:0];
+    
+    CGSize canvasSize = self.collectionView.frame.size;
+    NSUInteger rowCount = (canvasSize.height - self.itemSize.height) / (self.itemSize.height + self.minimumInteritemSpacing) + 1;
+    NSUInteger columnCount = (canvasSize.width - self.itemSize.width) / (self.itemSize.width + self.minimumLineSpacing) + 1;
+    NSUInteger page = ceilf((CGFloat)count / (CGFloat)(rowCount * columnCount));
+    
+    CGSize contentSize = self.collectionView.frame.size;
+    contentSize.width = page * canvasSize.width;
+    
+    return contentSize;
 }
 
-// UICollectionView align logic missing in horizontal paging scrollview: http://stackoverflow.com/a/20156486/1807446
 - (CGRect)frameForItemAtIndexPath:(NSIndexPath *)indexPath {
-    CGRect collectionViewFrame = self.collectionView.frame;
-    
-    NSUInteger rowCount = (CGRectGetHeight(collectionViewFrame) - self.itemSize.height) / (self.itemSize.height + self.minimumLineSpacing) + 1;
-    NSUInteger columnCount = (CGRectGetWidth(collectionViewFrame) - self.itemSize.width) / (self.itemSize.width + self.minimumLineSpacing) + 1;
-    
-    CGFloat pageMarginX = (CGRectGetWidth(collectionViewFrame) - columnCount * self.itemSize.width - (columnCount > 1 ? (columnCount - 1) * self.minimumLineSpacing : 0)) / 2.0f;
-    
-    NSUInteger page = indexPath.item / (rowCount * columnCount);
-    NSUInteger remainder = indexPath.item - page * (rowCount * columnCount);
-    NSUInteger row = remainder / columnCount;
-    NSUInteger column = remainder - row * columnCount;
+    // UICollectionView align logic missing in horizontal paging scrollview: http://stackoverflow.com/a/20156486/1807446
     
     CGRect cellFrame = CGRectZero;
-    cellFrame.origin.x = pageMarginX + column * (self.itemSize.width + self.minimumLineSpacing);
-    cellFrame.origin.y = self.sectionInset.top;
+    cellFrame.origin.x = self.minimumLineSpacing + indexPath.item * CGRectGetWidth(self.collectionView.frame);
+    cellFrame.origin.y = self.minimumLineSpacing;
     cellFrame.size.width = self.itemSize.width;
     cellFrame.size.height = self.itemSize.height;
     
-    if (self.scrollDirection == UICollectionViewScrollDirectionHorizontal) {
-        cellFrame.origin.x += page * CGRectGetWidth(collectionViewFrame);
-    }
+    NSLog(@"indexpath: %@", indexPath.description);
     
     return cellFrame;
 }
@@ -80,7 +78,7 @@
     return attr;
 }
 
-- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect {    
     NSArray * originAttrs = [super layoutAttributesForElementsInRect:rect];
     NSMutableArray * attrs = [NSMutableArray array];
     
@@ -97,6 +95,9 @@
     return attrs;
 }
 
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)oldBounds {
+    return NO;
+}
 
 
 @end

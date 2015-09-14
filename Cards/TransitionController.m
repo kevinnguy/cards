@@ -77,7 +77,7 @@
 
     
     [UIView animateWithDuration:0.3f animations:^{
-        KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:detailViewController.collectionView.frame];
+        KCNLargeCardFlowLayout *layout = [[KCNLargeCardFlowLayout alloc] initWithCollectionViewFrame:detailViewController.collectionView.frame lineSpacing:4.0f];
         cellSnapshot.frame = CGRectMake(CGRectGetMinX(detailViewController.collectionView.frame) + layout.minimumLineSpacing,
                                         CGRectGetMinY(detailViewController.collectionView.frame) + layout.minimumLineSpacing,
                                         layout.itemSize.width,
@@ -124,9 +124,12 @@
     [containerView addSubview:cellSnapshot];
     
     if (detailViewController.dataSourceIndex != selectedIndexPath.item) {
+        NSInteger visibleCellsCount = [viewController.collectionView visibleCells].count;
         if (detailViewController.dataSourceIndex < selectedIndexPath.item - 1) {
+//            [viewController.collectionView scrollRectToVisible:CGRectMake(150 * selectedIndexPath.item, 0, CGRectGetWidth(viewController.collectionView.frame), CGRectGetHeight(viewController.collectionView.frame)) animated:NO];
             [viewController.collectionView scrollToItemAtIndexPath:selectedIndexPath atScrollPosition:UICollectionViewScrollPositionRight animated:NO];
         } else if (detailViewController.dataSourceIndex > selectedIndexPath.item + 1) {
+//            [viewController.collectionView scrollRectToVisible:CGRectMake(150 * selectedIndexPath.item, 0, CGRectGetWidth(viewController.collectionView.frame), CGRectGetHeight(viewController.collectionView.frame)) animated:NO];
             [viewController.collectionView scrollToItemAtIndexPath:selectedIndexPath atScrollPosition:UICollectionViewScrollPositionLeft animated:NO];
         }
     }
